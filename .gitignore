@@ -1,0 +1,36 @@
+# Python-specific ignores
+__pycache__/
+*.py[cod]
+*.pyo
+*.pyd
+*.pdb
+*.egg
+*.egg-info/
+dist/
+build/
+*.whl
+*.manifest
+*.spec
+env/
+venv/
+ENV/
+.venv/
+env.bak/
+*.log
+
+# IDE and editor ignores
+.vscode/
+.idea/
+*.sublime-workspace
+*.sublime-project
+*.swp
+*.swo
+*.bak
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# Exclude documents
+*.docx
+*.pdf

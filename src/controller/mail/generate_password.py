@@ -1,12 +1,13 @@
 from random import choice, randint
 
+
+# Définition des ensembles de caractères possibles
 alphabet_min = [ chr(i) for i in range(97,123) ]
 alphabet_maj = [ chr(i) for i in range(65,91) ]
 chiffres = [ chr(i) for i in range(48,58) ]
 caracteres_speciaux = [ '%' , '_' , '-' , '!' , '$' , '^' , '&' , '#' , '(' , ')' , '[' , ']' , '=' , '@']
 
-
-def pwd(n , min = True, maj = True, chif = True, cs = True):
+def pwd(n, min=True, maj=True, chif=True, cs=True):
     alphabets = dict()
     key = 0
     if min:
@@ -24,7 +25,7 @@ def pwd(n , min = True, maj = True, chif = True, cs = True):
     
     mdp = ''
     for i in range(n):
-            s = randint(0,key-1)
-            mdp += choice( alphabets[s] )
-            
+        s = randint(0, key-1)
+        mdp += choice(alphabets[s])
+        
     return mdp

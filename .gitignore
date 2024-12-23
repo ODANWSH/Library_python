@@ -17,6 +17,7 @@ ENV/
 .venv/
 env.bak/
 *.log
+store_credentials.py
 
 # IDE and editor ignores
 .vscode/

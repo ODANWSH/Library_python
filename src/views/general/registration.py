@@ -1,10 +1,9 @@
-from PyQt5 import QtWidgets, QtGui
-from PyQt5.QtCore import Qt, QSize
+from PyQt5.QtWidgets import QWidget, QLineEdit, QPushButton, QVBoxLayout, QLabel, QSpacerItem
 from PyQt5.QtGui import QFont
-import sys
+from PyQt5.QtCore import Qt
+from shared.utilities import send_email, store_password
 
-
-class RegistrationWindow(QtWidgets.QWidget):
+class RegistrationWindow(QWidget):
     def __init__(self):
         super().__init__()
 
@@ -15,118 +14,119 @@ class RegistrationWindow(QtWidgets.QWidget):
         # Appliquer la couleur de fond
         self.setStyleSheet("background-color: #EFC8B1;")
 
-        # Layout principal vertical
-        main_layout = QtWidgets.QVBoxLayout(self)
-        main_layout.setAlignment(Qt.AlignTop)
-        main_layout.setContentsMargins(0, 10, 0, 0)  # Réduction des marges pour maximiser l'espace vertical
-
         # Ajouter le label "Registration"
-        label = QtWidgets.QLabel(
-            "You don’t have the permission to register. "
-            "Please enter your name and your email. An administrator "
-            "will create your account and send your connection ID.",
-            self,
+        label = QLabel("Registration", self)
+        label.setAlignment(Qt.AlignTop | Qt.AlignHCenter)  # Centrer en haut
+        label.setStyleSheet(
+            "color: #514644; border-radius: 30px;"  # Ajouter les bords arrondis au label
         )
-        label.setAlignment(Qt.AlignCenter)  # Centrer horizontalement
-        label.setWordWrap(True)  # Permet le retour à la ligne automatique
-        label.setStyleSheet("""
-            color: #514644;
-            background-color: transparent;
-            padding: 10px;
-        """)  # Couleur du texte et ajout de padding pour l'esthétique
 
-        # Définir la police du texte
+        # Définir la police du texte en gras et de taille 48
         font = QFont()
         font.setBold(True)
-        font.setPointSize(16)
+        font.setPointSize(48)
         label.setFont(font)
 
-        main_layout.addWidget(label)  # Ajouter le label en haut
+        # Positionner le label en haut
+        label.move(220, 30)
 
-        # Ajouter un espace après le label (30 pixels)
-        main_layout.addSpacing(30)
+        # Layout principal
+        main_layout = QVBoxLayout()
 
-        # Champ de texte "Name"
-        self.name_field = QtWidgets.QLineEdit(self)
-        self.name_field.setPlaceholderText("Name")  # Texte d'exemple
-        self.name_field.setStyleSheet("""
+        # Ajouter un espacement extensible avant les champs de texte
+        main_layout.addStretch(1)
+
+        # Champ "Name"
+        self.name_field = QLineEdit(self)
+        self.name_field.setPlaceholderText("Name")
+        self.name_field.setStyleSheet(
+            """
             background-color: #514644;
             color: white;
-            border-radius: 17px;
+            border-radius: 17px;  /* Bords arrondis de 17px */
             padding: 5px;
-        """)
-        self.name_field.setFixedSize(220, 35)  # Taille fixe
-        main_layout.addWidget(self.name_field, alignment=Qt.AlignHCenter)
+            font-style: italic;
+            text-align: left;
+        """
+        )
+        self.name_field.setAlignment(Qt.AlignLeft)  # Aligner le texte à gauche
+        self.name_field.setFont(QFont("Arial", 18))  # Réduit la taille de la police
+        self.name_field.setFixedSize(220, 35)  # Taille définie à 220x35px
+        main_layout.addWidget(self.name_field)
 
-        # Champ de texte "First Name"
-        self.first_name_field = QtWidgets.QLineEdit(self)
-        self.first_name_field.setPlaceholderText("First Name")  # Texte d'exemple
-        self.first_name_field.setStyleSheet("""
+        # Champ "First Name"
+        self.first_name_field = QLineEdit(self)
+        self.first_name_field.setPlaceholderText("First name")
+        self.first_name_field.setStyleSheet(
+            """
             background-color: #514644;
             color: white;
-            border-radius: 17px;
+            border-radius: 17px;  /* Bords arrondis de 17px */
             padding: 5px;
-        """)
-        self.first_name_field.setFixedSize(220, 35)  # Taille fixe
-        main_layout.addWidget(self.first_name_field, alignment=Qt.AlignHCenter)
+            font-style: italic;
+            text-align: left;
+        """
+        )
+        self.first_name_field.setAlignment(Qt.AlignLeft)  # Aligner le texte à gauche
+        self.first_name_field.setFont(QFont("Arial", 18))  # Réduit la taille de la police
+        self.first_name_field.setFixedSize(220, 35)  # Taille définie à 220x35px
+        main_layout.addWidget(self.first_name_field)
 
-        # Champ de texte "Email"
-        self.email_field = QtWidgets.QLineEdit(self)
+        # Champ "Email"
+        self.email_field = QLineEdit(self)
         self.email_field.setPlaceholderText("Email")
-        self.email_field.setStyleSheet("""
+        self.email_field.setStyleSheet(
+            """
             background-color: #514644;
             color: white;
             border-radius: 17px;
             padding: 5px;
-        """)
-        self.email_field.setFixedSize(220, 35)
-        main_layout.addWidget(self.email_field, alignment=Qt.AlignHCenter)
+            font-style: italic;
+            text-align: left;
+        """
+        )
+        self.email_field.setAlignment(Qt.AlignLeft)  # Aligner le texte à gauche
+        self.email_field.setFont(QFont("Arial", 18))  # Réduit la taille de la police
+        self.email_field.setFixedSize(220, 35)  # Taille définie à 220x35px
+        main_layout.addWidget(self.email_field)
 
-        # Ajouter le bouton "Send Request"
-        self.send_request_button = QtWidgets.QPushButton("Send Request", self)
-        self.send_request_button.setStyleSheet("""
+        # Ajouter un espacement de 20px avant le bouton
+        main_layout.addSpacing(20)
+
+        # Bouton "Send Request"
+        self.send_request_button = QPushButton("Send Request")
+        self.send_request_button.setStyleSheet(
+            """
             background-color: #514644;
             color: white;
-            border-radius: 17px;
+            border-radius: 17px;  /* Bords arrondis */
             padding: 5px;
             font-size: 20px;
-        """)
-        self.send_request_button.setFixedSize(181, 35)
+        """
+        )
+        self.send_request_button.setFont(QFont("Arial", 20))
+        self.send_request_button.setFixedSize(180, 35)  # Taille définie à 180x35px
+        main_layout.addWidget(self.send_request_button)
 
-        # Ajouter un espace de 20 pixels entre le dernier champ texte et le bouton
-        main_layout.addSpacing(20)
-        main_layout.addWidget(self.send_request_button, alignment=Qt.AlignHCenter)
+        # Ajouter un espacement extensible après le bouton
+        main_layout.addStretch(1)
 
-        # Ajouter une flèche en haut à gauche pour revenir à la fenêtre de connexion
-        self.back_button = QtWidgets.QPushButton(self)
-        self.back_button.setGeometry(20, 20, 50, 50)  # Positionner la flèche en haut à gauche
-        self.back_button.setStyleSheet("background-color: transparent; border: none;")
+        # Connecter le bouton à la méthode handle_request
+        self.send_request_button.clicked.connect(self.handle_request)
 
-        # Vérifier si le chemin de l'icône est valide
-        icon_path = "../assets/icons8-flèche-gauche-100.png"  # Assurez-vous du chemin
-        if not QtGui.QIcon(icon_path).isNull():
-            back_icon = QtGui.QIcon(icon_path)
-            self.back_button.setIcon(back_icon)
-            self.back_button.setIconSize(QSize(40, 40))
+        self.setLayout(main_layout)
+
+    def handle_request(self):
+        # Récupérer les valeurs des champs
+        username = self.name_field.text()
+        email = self.email_field.text()
+        password = self.password_field.text()
+
+        if username and email and password:
+            # Stocker le mot de passe
+            store_password(username, email, password)
+
+            # Envoyer l'email
+            send_email(email, password)
         else:
-            print(f"Icon not found at: {icon_path}. Using default text.")
-            self.back_button.setText("←")  # Utiliser un texte si l'icône est introuvable
-
-        # Connecter le bouton à la fonction pour revenir à la fenêtre de connexion
-        self.back_button.clicked.connect(self.back_to_login)
-
-        self.show()
-
-    def back_to_login(self):
-        # Importer MainWindow ici pour éviter l'import circulaire
-        from login import MainWindow
-        # Retourner à la fenêtre de connexion
-        self.main_window = MainWindow()
-        self.main_window.show()
-        self.close()  # Fermer la fenêtre d'inscription
-
-
-if __name__ == '__main__':
-    app = QtWidgets.QApplication(sys.argv)
-    window = RegistrationWindow()
-    sys.exit(app.exec_())
+            print("Veuillez remplir tous les champs.")

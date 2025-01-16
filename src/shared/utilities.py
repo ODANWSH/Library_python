@@ -1,23 +1,46 @@
+import bcrypt
+from sql.db_connection import get_connection
+
+
+def store_password(username: str, email: str, password_plain: str):
+    # Connexion à la base de données
+    conn = (
+        get_connection()
+    )  # Assurez-vous que get_connection retourne une instance valide
+    cursor = conn.cursor()
+
+    # Hachage du mot de passe
+    password_hashed = bcrypt.hashpw(
+        password_plain.encode("utf-8"), bcrypt.gensalt()
+    ).decode("utf-8")
+
+    # Insérer le mot de passe haché dans la base de données
+    cursor.execute(
+        """
+        INSERT INTO Utilisateur (Nom_Utilisateur, Mot_de_passe_hash, Email)
+        VALUES (%s, %s, %s)
+        """,
+        (username, password_hashed, email),
+    )
+
+    conn.commit()
+    conn.close()
+
+    print(f"Mot de passe pour {username} enregistré avec succès.")
+
+
 import smtplib
-import sqlite3
+import keyring
 from email.mime.multipart import MIMEMultipart
 from email.mime.text import MIMEText
-
-import bcrypt
-import keyring
-from sql.db_connection import get_connection
-from shared.utilities import store_password
-from views.general.registration import RegistrationWindow
-
-from generate_password import pwd
+from shared.utilities import (
+    store_password,
+)  # Assurez-vous que cette fonction est bien importée
 
 
-# Fonction pour envoyer un e-mail
-def send_email():
-
+def send_email(email: str, password: str):
     service_name = "laposte"
-    password = pwd(15)  # Mot de passe en texte clair pour l'utilisateur
-    email = store_password
+
     # Récupération des identifiants
     sender_email = keyring.get_password(service_name, "email")
     if not sender_email:
@@ -33,9 +56,9 @@ def send_email():
         )
         return
 
-    receiver_email = email
+    receiver_email = email  # Utilisation de l'email fourni en paramètre
     subject = "Test"
-    body = f"Bonjour,\n\nVoici vos identifiants :\n Name : Name\n Password :{password} \n Bonne lecture !"
+    body = f"Bonjour,\n\nVoici vos identifiants :\n Name : Name\n Password : {password} \nBonne lecture !"
 
     # Création du message
     message = MIMEMultipart()
@@ -53,8 +76,8 @@ def send_email():
 
         # Enregistrer le mot de passe en base de données après l'envoi du mail
         store_password(
-            password
-        )  # Enregistrer le mot de passe en base de données (haché)
+            "Nom d'utilisateur", email, password
+        )  # Exemple d'appel à store_password
 
     except Exception as e:
         print(f"Erreur lors de l'envoi : {e}")

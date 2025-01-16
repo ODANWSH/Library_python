@@ -1,11 +1,26 @@
 from random import choice, randint
 
-
 # Définition des ensembles de caractères possibles
-alphabet_min = [ chr(i) for i in range(97,123) ]
-alphabet_maj = [ chr(i) for i in range(65,91) ]
-chiffres = [ chr(i) for i in range(48,58) ]
-caracteres_speciaux = [ '%' , '_' , '-' , '!' , '$' , '^' , '&' , '#' , '(' , ')' , '[' , ']' , '=' , '@']
+alphabet_min = [chr(i) for i in range(97, 123)]
+alphabet_maj = [chr(i) for i in range(65, 91)]
+chiffres = [chr(i) for i in range(48, 58)]
+caracteres_speciaux = [
+    "%",
+    "_",
+    "-",
+    "!",
+    "$",
+    "^",
+    "&",
+    "#",
+    "(",
+    ")",
+    "[",
+    "]",
+    "=",
+    "@",
+]
+
 
 def pwd(n, min=True, maj=True, chif=True, cs=True):
     alphabets = dict()
@@ -22,10 +37,10 @@ def pwd(n, min=True, maj=True, chif=True, cs=True):
     if cs:
         alphabets[key] = caracteres_speciaux
         key += 1
-    
-    mdp = ''
+
+    mdp = ""
     for i in range(n):
-        s = randint(0, key-1)
+        s = randint(0, key - 1)
         mdp += choice(alphabets[s])
-        
+
     return mdp
